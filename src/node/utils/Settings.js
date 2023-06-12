@@ -123,8 +123,8 @@ exports.suppressErrorsInPadText = false;
  * default case: ep-lite does *not* use SSL. A signed server key is not required in this case.
  */
 exports.ssl = {
-  key: path.join(__dirname, "path/to/key"),
-  cert: path.join(__dirname, "path/to/cert"),
+  key: path.join(__dirname, "../../../localhost-key.pem"),
+  cert: path.join(__dirname, "../../../localhost.pem"),
 };
 
 /**
