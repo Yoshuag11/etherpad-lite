@@ -12,7 +12,7 @@ This application example is made up of two main parts: A server running the web 
 
 The way this project should be used is by:
 
-0. If you have installed mkcert, run `mkcert localhost` (from a terminal/console) to create the key and certificate files to start the application. Otherwise proceed to create them in any way you prefer, making sure to configure them within the project.
+0. If you have installed mkcert, run `mkcert localhost` at the root of the project (from a terminal/console) to create the key and certificate files to start the application. Otherwise proceed to create them in any way you prefer, making sure to configure them within the project.
 1. Run `src/bin/run.sh` to initialize Etherpad.
 2. Then head over to `packages/app` and run `npm install` install all the required dependencies..
 3. Now run `npm run build` to build the project's code. Optionally, to compile the code in `watch` mode, ` -- -w` can be added at the end.
