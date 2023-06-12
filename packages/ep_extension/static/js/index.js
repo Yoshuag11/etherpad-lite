@@ -1,5 +1,5 @@
 "use strict";
 
 exports.acePostWriteDomLineHTML = () => {
-  console.log("Content changed");
+  // hooks useful to identify when the pad's content has changed
 };

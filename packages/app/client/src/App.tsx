@@ -25,10 +25,7 @@ export default function App() {
       <>
         <iframe
           name="embed_readwrite"
-          src={
-            `https://${window.location.hostname}:9001/set_session?` +
-            `sessionId=${sessionId}&padId=${padId}`
-          }
+          src={`https://${window.location.hostname}:9001/set_session?&padId=${padId}`}
           width="100%"
           height="600"
           title="application_pad"

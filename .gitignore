@@ -11,6 +11,7 @@ npm-debug.log
 *.DS_Store
 *.crt
 *.key
+*.pem
 credentials.json
 out/
 .nyc_output

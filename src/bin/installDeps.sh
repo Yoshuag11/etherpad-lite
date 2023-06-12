@@ -41,6 +41,7 @@ log "Installing dependencies..."
   mkdir -p node_modules &&
   cd node_modules &&
   { [ -d ep_etherpad-lite ] || ln -sf ../src ep_etherpad-lite; } &&
+  ln -sf ../packages/ep_extension ep_extension &&
   cd ep_etherpad-lite &&
   npm ci --no-optional
 ) || exit 1
