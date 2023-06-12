@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 /**
  * The Settings module reads the settings out of settings.json and provides
  * this information to the other modules
@@ -27,31 +27,29 @@
  * limitations under the License.
  */
 
-const absolutePaths = require('./AbsolutePaths');
-const deepEqual = require('fast-deep-equal/es6');
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const argv = require('./Cli').argv;
-const jsonminify = require('jsonminify');
-const log4js = require('log4js');
-const randomString = require('./randomstring');
-const suppressDisableMsg = ' -- To suppress these warning messages change ' +
-    'suppressErrorsInPadText to true in your settings.json\n';
-const _ = require('underscore');
+const absolutePaths = require("./AbsolutePaths");
+const deepEqual = require("fast-deep-equal/es6");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+const argv = require("./Cli").argv;
+const jsonminify = require("jsonminify");
+const log4js = require("log4js");
+const randomString = require("./randomstring");
+const suppressDisableMsg =
+  " -- To suppress these warning messages change " +
+  "suppressErrorsInPadText to true in your settings.json\n";
+const _ = require("underscore");
 
-const logger = log4js.getLogger('settings');
+const logger = log4js.getLogger("settings");
 
 // Exported values that settings.json and credentials.json cannot override.
-const nonSettings = [
-  'credentialsFilename',
-  'settingsFilename',
-];
+const nonSettings = ["credentialsFilename", "settingsFilename"];
 
 // This is a function to make it easy to create a new instance. It is important to not reuse a
 // config object after passing it to log4js.configure() because that method mutates the object. :(
-const defaultLogConfig = () => ({appenders: [{type: 'console'}]});
-const defaultLogLevel = 'INFO';
+const defaultLogConfig = () => ({ appenders: [{ type: "console" }] });
+const defaultLogLevel = "INFO";
 
 const initLogging = (logLevel, config) => {
   // log4js.configure() modifies exports.logconfig so check for equality first.
@@ -60,7 +58,7 @@ const initLogging = (logLevel, config) => {
   log4js.setGlobalLogLevel(logLevel);
   log4js.replaceConsole();
   // Log the warning after configuring log4js to increase the chances the user will see it.
-  if (!logConfigIsDefault) logger.warn('The logconfig setting is deprecated.');
+  if (!logConfigIsDefault) logger.warn("The logconfig setting is deprecated.");
 };
 
 // Initialize logging as early as possible with reasonable defaults. Logging will be re-initialized
@@ -69,15 +67,21 @@ initLogging(defaultLogLevel, defaultLogConfig());
 
 /* Root path of the installation */
 exports.root = absolutePaths.findEtherpadRoot();
-logger.info('All relative paths will be interpreted relative to the identified ' +
-            `Etherpad base dir: ${exports.root}`);
-exports.settingsFilename = absolutePaths.makeAbsolute(argv.settings || 'settings.json');
-exports.credentialsFilename = absolutePaths.makeAbsolute(argv.credentials || 'credentials.json');
+logger.info(
+  "All relative paths will be interpreted relative to the identified " +
+    `Etherpad base dir: ${exports.root}`
+);
+exports.settingsFilename = absolutePaths.makeAbsolute(
+  argv.settings || "settings.json"
+);
+exports.credentialsFilename = absolutePaths.makeAbsolute(
+  argv.credentials || "credentials.json"
+);
 
 /**
  * The app title, visible e.g. in the browser window
  */
-exports.title = 'Etherpad';
+exports.title = "Etherpad";
 
 /**
  * Pathname of the favicon you want to use. If null, the skin's favicon is
@@ -95,16 +99,18 @@ exports.favicon = null;
  */
 exports.skinName = null;
 
-exports.skinVariants = 'super-light-toolbar super-light-editor light-background';
+exports.skinVariants =
+  "super-light-toolbar super-light-editor light-background";
 
 /**
  * The IP ep-lite should listen to
  */
-exports.ip = '0.0.0.0';
+exports.ip = "0.0.0.0";
 
 /**
  * The Port ep-lite should listen to
  */
+// exports.port = process.env.PORT || 443;
 exports.port = process.env.PORT || 9001;
 
 /**
@@ -116,12 +122,15 @@ exports.suppressErrorsInPadText = false;
  * The SSL signed server key and the Certificate Authority's own certificate
  * default case: ep-lite does *not* use SSL. A signed server key is not required in this case.
  */
-exports.ssl = false;
+exports.ssl = {
+  key: path.join(__dirname, "path/to/key"),
+  cert: path.join(__dirname, "path/to/cert"),
+};
 
 /**
  * socket.io transport methods
  **/
-exports.socketTransportProtocols = ['xhr-polling', 'jsonp-polling', 'htmlfile'];
+exports.socketTransportProtocols = ["xhr-polling", "jsonp-polling", "htmlfile"];
 
 exports.socketIo = {
   /**
@@ -138,23 +147,23 @@ exports.socketIo = {
 /*
  * The Type of the database
  */
-exports.dbType = 'dirty';
+exports.dbType = "dirty";
 /**
  * This setting is passed with dbType to ueberDB to set up the database
  */
-exports.dbSettings = {filename: path.join(exports.root, 'var/dirty.db')};
+exports.dbSettings = { filename: path.join(exports.root, "var/dirty.db") };
 
 /**
  * The default Text of a new pad
  */
 exports.defaultPadText = [
-  'Welcome to Etherpad!',
-  '',
-  'This pad text is synchronized as you type, so that everyone viewing this page sees the same ' +
-      'text. This allows you to collaborate seamlessly on documents!',
-  '',
-  'Etherpad on Github: https://github.com/ether/etherpad-lite',
-].join('\n');
+  "Welcome to Etherpad!",
+  "",
+  "This pad text is synchronized as you type, so that everyone viewing this page sees the same " +
+    "text. This allows you to collaborate seamlessly on documents!",
+  "",
+  "Etherpad on Github: https://github.com/ether/etherpad-lite",
+].join("\n");
 
 /**
  * The default Pad Settings for a user (Can be overridden by changing the setting
@@ -170,7 +179,7 @@ exports.padOptions = {
   rtl: false,
   alwaysShowChat: false,
   chatAndUsers: false,
-  lang: 'en-gb',
+  lang: "en",
 };
 
 /**
@@ -206,18 +215,18 @@ exports.padShortcutEnabled = {
  */
 exports.toolbar = {
   left: [
-    ['bold', 'italic', 'underline', 'strikethrough'],
-    ['orderedlist', 'unorderedlist', 'indent', 'outdent'],
-    ['undo', 'redo'],
-    ['clearauthorship'],
+    ["bold", "italic", "underline", "strikethrough"],
+    ["orderedlist", "unorderedlist", "indent", "outdent"],
+    ["undo", "redo"],
+    ["clearauthorship"],
   ],
   right: [
-    ['importexport', 'timeslider', 'savedrevision'],
-    ['settings', 'embed'],
-    ['showusers'],
+    ["importexport", "timeslider", "savedrevision"],
+    ["settings", "embed"],
+    ["showusers"],
   ],
   timeslider: [
-    ['timeslider_export', 'timeslider_settings', 'timeslider_returnToPad'],
+    ["timeslider_export", "timeslider_settings", "timeslider_returnToPad"],
   ],
 };
 
@@ -321,7 +330,7 @@ exports.cookie = {
    * significant usability drawbacks vs. "Lax". See
    * https://stackoverflow.com/q/41841880 for discussion.
    */
-  sameSite: 'Lax',
+  sameSite: "None",
 };
 
 /*
@@ -428,21 +437,20 @@ exports.importMaxFileSize = 50 * 1024 * 1024;
  */
 exports.enableAdminUITests = false;
 
-
 // checks if abiword is avaiable
 exports.abiwordAvailable = () => {
   if (exports.abiword != null) {
-    return os.type().indexOf('Windows') !== -1 ? 'withoutPDF' : 'yes';
+    return os.type().indexOf("Windows") !== -1 ? "withoutPDF" : "yes";
   } else {
-    return 'no';
+    return "no";
   }
 };
 
 exports.sofficeAvailable = () => {
   if (exports.soffice != null) {
-    return os.type().indexOf('Windows') !== -1 ? 'withoutPDF' : 'yes';
+    return os.type().indexOf("Windows") !== -1 ? "withoutPDF" : "yes";
   } else {
-    return 'no';
+    return "no";
   }
 };
 
@@ -450,34 +458,41 @@ exports.exportAvailable = () => {
   const abiword = exports.abiwordAvailable();
   const soffice = exports.sofficeAvailable();
 
-  if (abiword === 'no' && soffice === 'no') {
-    return 'no';
-  } else if ((abiword === 'withoutPDF' && soffice === 'no') ||
-      (abiword === 'no' && soffice === 'withoutPDF')) {
-    return 'withoutPDF';
+  if (abiword === "no" && soffice === "no") {
+    return "no";
+  } else if (
+    (abiword === "withoutPDF" && soffice === "no") ||
+    (abiword === "no" && soffice === "withoutPDF")
+  ) {
+    return "withoutPDF";
   } else {
-    return 'yes';
+    return "yes";
   }
 };
 
 // Provide git version if available
 exports.getGitCommit = () => {
-  let version = '';
+  let version = "";
+
   try {
     let rootPath = exports.root;
+
     if (fs.lstatSync(`${rootPath}/.git`).isFile()) {
-      rootPath = fs.readFileSync(`${rootPath}/.git`, 'utf8');
-      rootPath = rootPath.split(' ').pop().trim();
+      rootPath = fs.readFileSync(`${rootPath}/.git`, "utf8");
+      rootPath = rootPath.split(" ").pop().trim();
     } else {
-      rootPath += '/.git';
+      rootPath += "/.git";
     }
-    const ref = fs.readFileSync(`${rootPath}/HEAD`, 'utf-8');
-    if (ref.startsWith('ref: ')) {
-      const refPath = `${rootPath}/${ref.substring(5, ref.indexOf('\n'))}`;
-      version = fs.readFileSync(refPath, 'utf-8');
+
+    const ref = fs.readFileSync(`${rootPath}/HEAD`, "utf-8");
+
+    if (ref.startsWith("ref: ")) {
+      const refPath = `${rootPath}/${ref.substring(5, ref.indexOf("\n"))}`;
+      version = fs.readFileSync(refPath, "utf-8");
     } else {
       version = ref;
     }
+
     version = version.substring(0, 7);
   } catch (e) {
     logger.warn(`Can't get git version for server header\n${e.message}`);
@@ -486,7 +501,7 @@ exports.getGitCommit = () => {
 };
 
 // Return etherpad version from package.json
-exports.getEpVersion = () => require('../../package.json').version;
+exports.getEpVersion = () => require("../../package.json").version;
 
 /**
  * Receives a settingsObj and, if the property name is a valid configuration
@@ -503,13 +518,13 @@ const storeSettings = (settingsObj) => {
     }
 
     // test if the setting starts with a lowercase character
-    if (i.charAt(0).search('[a-z]') !== 0) {
+    if (i.charAt(0).search("[a-z]") !== 0) {
       logger.warn(`Settings should start with a lowercase character: '${i}'`);
     }
 
     // we know this setting, so we overwrite it
     // or it's a settings hash, specific to a plugin
-    if (exports[i] !== undefined || i.indexOf('ep_') === 0) {
+    if (exports[i] !== undefined || i.indexOf("ep_") === 0) {
       if (_.isObject(settingsObj[i]) && !Array.isArray(settingsObj[i])) {
         exports[i] = _.defaults(settingsObj[i], exports[i]);
       } else {
@@ -517,7 +532,9 @@ const storeSettings = (settingsObj) => {
       }
     } else {
       // this setting is unknown, output a warning and throw it away
-      logger.warn(`Unknown Setting: '${i}'. This setting doesn't exist or it was removed`);
+      logger.warn(
+        `Unknown Setting: '${i}'. This setting doesn't exist or it was removed`
+      );
     }
   }
 };
@@ -536,7 +553,9 @@ const storeSettings = (settingsObj) => {
  */
 const coerceValue = (stringValue) => {
   // cooked from https://stackoverflow.com/questions/175739/built-in-way-in-javascript-to-check-if-a-string-is-a-valid-number
-  const isNumeric = !isNaN(stringValue) && !isNaN(parseFloat(stringValue) && isFinite(stringValue));
+  const isNumeric =
+    !isNaN(stringValue) &&
+    !isNaN(parseFloat(stringValue) && isFinite(stringValue));
 
   if (isNumeric) {
     // detected numeric string. Coerce to a number
@@ -545,11 +564,16 @@ const coerceValue = (stringValue) => {
   }
 
   switch (stringValue) {
-    case 'true': return true;
-    case 'false': return false;
-    case 'undefined': return undefined;
-    case 'null': return null;
-    default: return stringValue;
+    case "true":
+      return true;
+    case "false":
+      return false;
+    case "undefined":
+      return undefined;
+    case "null":
+      return null;
+    default:
+      return stringValue;
   }
 };
 
@@ -595,7 +619,7 @@ const lookupEnvironmentVariables = (obj) => {
      * the first invocation of replacer() is with an empty key. Just go on, or
      * we would zap the entire object.
      */
-    if (key === '') {
+    if (key === "") {
       return value;
     }
 
@@ -607,7 +631,7 @@ const lookupEnvironmentVariables = (obj) => {
      * The environment variable expansion syntax "${ENV_VAR}" is just a string
      * of specific form, after all.
      */
-    if (typeof value !== 'string') {
+    if (typeof value !== "string") {
       return value;
     }
 
@@ -632,11 +656,13 @@ const lookupEnvironmentVariables = (obj) => {
     const envVarValue = process.env[envVarName];
     const defaultValue = match[3];
 
-    if ((envVarValue === undefined) && (defaultValue === undefined)) {
-      logger.warn(`Environment variable "${envVarName}" does not contain any value for ` +
-                  `configuration key "${key}", and no default was given. Using null. ` +
-                  'THIS BEHAVIOR MAY CHANGE IN A FUTURE VERSION OF ETHERPAD; you should ' +
-                  'explicitly use "null" as the default if you want to continue to use null.');
+    if (envVarValue === undefined && defaultValue === undefined) {
+      logger.warn(
+        `Environment variable "${envVarName}" does not contain any value for ` +
+          `configuration key "${key}", and no default was given. Using null. ` +
+          "THIS BEHAVIOR MAY CHANGE IN A FUTURE VERSION OF ETHERPAD; you should " +
+          'explicitly use "null" as the default if you want to continue to use null.'
+      );
 
       /*
        * We have to return null, because if we just returned undefined, the
@@ -645,9 +671,11 @@ const lookupEnvironmentVariables = (obj) => {
       return null;
     }
 
-    if ((envVarValue === undefined) && (defaultValue !== undefined)) {
-      logger.debug(`Environment variable "${envVarName}" not found for ` +
-                   `configuration key "${key}". Falling back to default value.`);
+    if (envVarValue === undefined && defaultValue !== undefined) {
+      logger.debug(
+        `Environment variable "${envVarName}" not found for ` +
+          `configuration key "${key}". Falling back to default value.`
+      );
 
       return coerceValue(defaultValue);
     }
@@ -659,7 +687,8 @@ const lookupEnvironmentVariables = (obj) => {
      * returning it, in order to maintain backward compatibility.
      */
     logger.debug(
-        `Configuration key "${key}" will be read from environment variable "${envVarName}"`);
+      `Configuration key "${key}" will be read from environment variable "${envVarName}"`
+    );
 
     return coerceValue(envVarValue);
   });
@@ -678,17 +707,17 @@ const lookupEnvironmentVariables = (obj) => {
  * The isSettings variable only controls the error logging.
  */
 const parseSettings = (settingsFilename, isSettings) => {
-  let settingsStr = '';
+  let settingsStr = "";
 
   let settingsType, notFoundMessage, notFoundFunction;
 
   if (isSettings) {
-    settingsType = 'settings';
-    notFoundMessage = 'Continuing using defaults!';
+    settingsType = "settings";
+    notFoundMessage = "Continuing using defaults!";
     notFoundFunction = logger.warn.bind(logger);
   } else {
-    settingsType = 'credentials';
-    notFoundMessage = 'Ignoring.';
+    settingsType = "credentials";
+    notFoundMessage = "Ignoring.";
     notFoundFunction = logger.info.bind(logger);
   }
 
@@ -696,14 +725,16 @@ const parseSettings = (settingsFilename, isSettings) => {
     // read the settings file
     settingsStr = fs.readFileSync(settingsFilename).toString();
   } catch (e) {
-    notFoundFunction(`No ${settingsType} file found in ${settingsFilename}. ${notFoundMessage}`);
+    notFoundFunction(
+      `No ${settingsType} file found in ${settingsFilename}. ${notFoundMessage}`
+    );
 
     // or maybe undefined!
     return null;
   }
 
   try {
-    settingsStr = jsonminify(settingsStr).replace(',]', ']').replace(',}', '}');
+    settingsStr = jsonminify(settingsStr).replace(",]", "]").replace(",}", "}");
 
     const settings = JSON.parse(settingsStr);
 
@@ -713,8 +744,10 @@ const parseSettings = (settingsFilename, isSettings) => {
 
     return replacedSettings;
   } catch (e) {
-    logger.error(`There was an error processing your ${settingsType} ` +
-                 `file from ${settingsFilename}: ${e.message}`);
+    logger.error(
+      `There was an error processing your ${settingsType} ` +
+        `file from ${settingsFilename}: ${e.message}`
+    );
 
     process.exit(1);
   }
@@ -729,21 +762,25 @@ exports.reloadSettings = () => {
   initLogging(exports.loglevel, exports.logconfig);
 
   if (!exports.skinName) {
-    logger.warn('No "skinName" parameter found. Please check out settings.json.template and ' +
-                'update your settings.json. Falling back to the default "colibris".');
-    exports.skinName = 'colibris';
+    logger.warn(
+      'No "skinName" parameter found. Please check out settings.json.template and ' +
+        'update your settings.json. Falling back to the default "colibris".'
+    );
+    exports.skinName = "colibris";
   }
 
   // checks if skinName has an acceptable value, otherwise falls back to "colibris"
   if (exports.skinName) {
-    const skinBasePath = path.join(exports.root, 'src', 'static', 'skins');
+    const skinBasePath = path.join(exports.root, "src", "static", "skins");
     const countPieces = exports.skinName.split(path.sep).length;
 
     if (countPieces !== 1) {
-      logger.error(`skinName must be the name of a directory under "${skinBasePath}". This is ` +
-                   `not valid: "${exports.skinName}". Falling back to the default "colibris".`);
+      logger.error(
+        `skinName must be the name of a directory under "${skinBasePath}". This is ` +
+          `not valid: "${exports.skinName}". Falling back to the default "colibris".`
+      );
 
-      exports.skinName = 'colibris';
+      exports.skinName = "colibris";
     }
 
     // informative variable, just for the log messages
@@ -751,16 +788,20 @@ exports.reloadSettings = () => {
 
     // what if someone sets skinName == ".." or "."? We catch him!
     if (absolutePaths.isSubdir(skinBasePath, skinPath) === false) {
-      logger.error(`Skin path ${skinPath} must be a subdirectory of ${skinBasePath}. ` +
-                   'Falling back to the default "colibris".');
+      logger.error(
+        `Skin path ${skinPath} must be a subdirectory of ${skinBasePath}. ` +
+          'Falling back to the default "colibris".'
+      );
 
-      exports.skinName = 'colibris';
+      exports.skinName = "colibris";
       skinPath = path.join(skinBasePath, exports.skinName);
     }
 
     if (fs.existsSync(skinPath) === false) {
-      logger.error(`Skin path ${skinPath} does not exist. Falling back to the default "colibris".`);
-      exports.skinName = 'colibris';
+      logger.error(
+        `Skin path ${skinPath} does not exist. Falling back to the default "colibris".`
+      );
+      exports.skinName = "colibris";
       skinPath = path.join(skinBasePath, exports.skinName);
     }
 
@@ -772,7 +813,8 @@ exports.reloadSettings = () => {
     if (exports.abiword != null) {
       fs.exists(exports.abiword, (exists) => {
         if (!exists) {
-          const abiwordError = 'Abiword does not exist at this path, check your settings file.';
+          const abiwordError =
+            "Abiword does not exist at this path, check your settings file.";
           if (!exports.suppressErrorsInPadText) {
             exports.defaultPadText += `\nError: ${abiwordError}${suppressDisableMsg}`;
           }
@@ -787,7 +829,7 @@ exports.reloadSettings = () => {
     fs.exists(exports.soffice, (exists) => {
       if (!exists) {
         const sofficeError =
-            'soffice (libreoffice) does not exist at this path, check your settings file.';
+          "soffice (libreoffice) does not exist at this path, check your settings file.";
 
         if (!exports.suppressErrorsInPadText) {
           exports.defaultPadText += `\nError: ${sofficeError}${suppressDisableMsg}`;
@@ -799,37 +841,49 @@ exports.reloadSettings = () => {
   }
 
   if (!exports.sessionKey) {
-    const sessionkeyFilename = absolutePaths.makeAbsolute(argv.sessionkey || './SESSIONKEY.txt');
+    const sessionkeyFilename = absolutePaths.makeAbsolute(
+      argv.sessionkey || "./SESSIONKEY.txt"
+    );
     try {
-      exports.sessionKey = fs.readFileSync(sessionkeyFilename, 'utf8');
+      exports.sessionKey = fs.readFileSync(sessionkeyFilename, "utf8");
       logger.info(`Session key loaded from: ${sessionkeyFilename}`);
     } catch (e) {
       logger.info(
-          `Session key file "${sessionkeyFilename}" not found. Creating with random contents.`);
+        `Session key file "${sessionkeyFilename}" not found. Creating with random contents.`
+      );
       exports.sessionKey = randomString(32);
-      fs.writeFileSync(sessionkeyFilename, exports.sessionKey, 'utf8');
+      fs.writeFileSync(sessionkeyFilename, exports.sessionKey, "utf8");
     }
   } else {
-    logger.warn('Declaring the sessionKey in the settings.json is deprecated. ' +
-                'This value is auto-generated now. Please remove the setting from the file. -- ' +
-                'If you are seeing this error after restarting using the Admin User ' +
-                'Interface then you can ignore this message.');
+    logger.warn(
+      "Declaring the sessionKey in the settings.json is deprecated. " +
+        "This value is auto-generated now. Please remove the setting from the file. -- " +
+        "If you are seeing this error after restarting using the Admin User " +
+        "Interface then you can ignore this message."
+    );
   }
 
-  if (exports.dbType === 'dirty') {
-    const dirtyWarning = 'DirtyDB is used. This is not recommended for production.';
+  if (exports.dbType === "dirty") {
+    const dirtyWarning =
+      "DirtyDB is used. This is not recommended for production.";
     if (!exports.suppressErrorsInPadText) {
       exports.defaultPadText += `\nWarning: ${dirtyWarning}${suppressDisableMsg}`;
     }
 
-    exports.dbSettings.filename = absolutePaths.makeAbsolute(exports.dbSettings.filename);
-    logger.warn(`${dirtyWarning} File location: ${exports.dbSettings.filename}`);
+    exports.dbSettings.filename = absolutePaths.makeAbsolute(
+      exports.dbSettings.filename
+    );
+    logger.warn(
+      `${dirtyWarning} File location: ${exports.dbSettings.filename}`
+    );
   }
 
-  if (exports.ip === '') {
+  if (exports.ip === "") {
     // using Unix socket for connectivity
-    logger.warn('The settings file contains an empty string ("") for the "ip" parameter. The ' +
-                '"port" parameter will be interpreted as the path to a Unix socket to bind at.');
+    logger.warn(
+      'The settings file contains an empty string ("") for the "ip" parameter. The ' +
+        '"port" parameter will be interpreted as the path to a Unix socket to bind at.'
+    );
   }
 
   /*
@@ -844,7 +898,9 @@ exports.reloadSettings = () => {
    * TODO: remove the "?v=randomstring" parameter, and replace with hashed filenames instead
    */
   exports.randomVersionString = randomString(4);
-  logger.info(`Random string used for versioning assets: ${exports.randomVersionString}`);
+  logger.info(
+    `Random string used for versioning assets: ${exports.randomVersionString}`
+  );
 };
 
 exports.exportedForTestingOnly = {

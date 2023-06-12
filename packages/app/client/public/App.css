@@ -1,0 +1,10 @@
+.app-form div {
+  display: flex;
+  justify-content: space-between;
+  inline-size: 15rem;
+  margin-top: 0.5rem;
+}
+
+.app-form-container {
+  block-size: 10rem;
+}

@@ -1,0 +1,10 @@
+{
+  "html.format.enable": true,
+  "html.format.templating": true,
+  "html.format.unformattedContentDelimiter": "",
+  "javascript.format.insertSpaceBeforeAndAfterBinaryOperators": true,
+  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+  "[html]": {
+    "editor.defaultFormatter": "j69.ejs-beautify"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "parts": [
+    {
+      "name": "extension",
+      "client_hooks": {
+        "acePostWriteDomLineHTML": "ep_extension/static/js/index"
+      },
+      "hooks": {
+        "expressCreateServer": "ep_extension/node/hooks/index:expressCreateServer"
+      }
+    }
+  ]
+}

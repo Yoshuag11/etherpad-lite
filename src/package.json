@@ -124,7 +124,13 @@
           "**/.eslintrc.js",
           "tests/frontend/**/*"
         ],
-        "extends": "etherpad/node"
+        "extends": "etherpad/node",
+        "rules": {
+          "indent": 0,
+          "max-len": 0,
+          "quotes": 0,
+          "object-curly-spacing": 0
+        }
       },
       {
         "files": [
@@ -148,7 +154,14 @@
               "helper": "readonly"
             }
           }
-        ]
+        ],
+        "rules": {
+          "curly": 0,
+          "implicit-arrow-linebreak": 0,
+          "indent": 0,
+          "object-curly-spacing": 0,
+          "quotes": 0
+        }
       },
       {
         "files": [
@@ -164,8 +177,10 @@
         ],
         "extends": "etherpad/tests",
         "rules": {
+          "indent": "off",
           "mocha/no-exports": "off",
-          "mocha/no-top-level-hooks": "off"
+          "mocha/no-top-level-hooks": "off",
+          "quotes": "off"
         }
       },
       {
