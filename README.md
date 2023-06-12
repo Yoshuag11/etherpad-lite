@@ -4,7 +4,7 @@ Because Etherpad is embedded to the app trough an iframe and etherpad works by s
 
 Here is a [tutorial](https://web.dev/how-to-use-local-https/) on how to create both the key and certificate required to securely initiate Etherpad.
 
-Once the aforementioned files are created, they need to be configured in `src/node/utils/Settings.js`, using the exported object `ssl`.
+Once the aforementioned files are created, they need to be configured in `src/node/utils/Settings.js` using the exported object `ssl`, as well in `packages/app/server/index.js`, setting them within the `options` object variable provided to `createServer` contructor method.
 
 # Description
 
