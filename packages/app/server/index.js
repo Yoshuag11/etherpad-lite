@@ -11,9 +11,20 @@ const etherpadPort = 9001;
 const etherpadProtocol = "https";
 const etherpadHost = `${etherpadProtocol}://127.0.0.1:${etherpadPort}`;
 const etherpadApiEndpoint = "/api/1.2.15/";
-const apiKey =
-  "59e716a95f5a137cea0834a8c2f81c6f3ce1574edd0cfdfbfdb97f81a52771f1";
 const appConfigurationFile = "app_configuration.json";
+
+// apikey is loaded dynamically to use the key Etherpad indeed creates
+let apiKey;
+
+try {
+  apiKey = fs
+    .readFileSync(path.join(__dirname, "../../../APIKEY.txt"))
+    .toString();
+} catch (error) {
+  console.log(error);
+  console.log("Error reading application key");
+  process.exit(1);
+}
 
 function getConfiguration() {
   const configuration = JSON.parse(
