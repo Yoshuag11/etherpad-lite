@@ -1,8 +1,8 @@
 # Requisites
 
-Because Etherpad is embedded to the app trough an iframe and etherpad works by setting specific cookies, a secure connection is required to successfully run the application.
+Because Etherpad is embedded to the app trough an iframe and Etherpad works by setting specific cookies, a secure connection is required to successfully run the application.
 
-Here is a [tutorial](https://web.dev/how-to-use-local-https/) on how to create both the key and certificate required to securely initiate Etherpad.
+Here is a [tutorial](https://web.dev/how-to-use-local-https/) on how to create both the key and certificate files required to securely initiate Etherpad.
 
 Once the aforementioned files are created, they need to be configured in `src/node/utils/Settings.js` using the exported object `ssl`, as well in `packages/app/server/index.js`, setting them within the `options` object variable provided to `createServer` contructor method.
 
@@ -15,7 +15,7 @@ The way this project should be used is by:
 0. If you have installed mkcert, run `mkcert localhost` at the root of the project (from a terminal/console) to create the key and certificate files to start the application. Otherwise proceed to create them in any way you prefer, making sure to configure them within the project.
 1. Run `src/bin/run.sh` to initialize Etherpad.
 2. Then head over to `packages/app` and run `npm install` to install all the required dependencies.
-3. Now run `npm run build` to build the project's code. Optionally, to compile the code in `watch` mode, ` -- -w` can be added at the end.
+3. Now run `npm run build` to build/compile the project's code. Optionally, to compile the code in `watch` mode, ` -- -w` can be added at the end.
 4. And to start the app, run `npm run start`.
 5. Finally, create a user and log in.
 
@@ -24,7 +24,7 @@ The way this project should be used is by:
 - Use a database to store Etherpad's data. Currently it is using `DirtyDB` witch stores everything along the project.
 - Provide support to create different pads for users: this example uses only one pad called "application_pad".
 - Enable `ep_hash_auth` to avoid storing of plain-text passwords in Etherpad `settings.json` file.
-- Set the path to the `LibreOffice` executable in order to import/export word documents. e.g. `/Applications/LibreOffice.app/Contents/MacOS/soffice` for a Mac computer with LibreOffice installed.
+- Set the path to the `LibreOffice`'s executable from within Etherpad's `settings.json` file, using key `soffice`, in order to import/export word documents: e.g. `/Applications/LibreOffice.app/Contents/MacOS/soffice` for a Mac computer with LibreOffice installed.
 
 # A real-time collaborative editor for the web
 
