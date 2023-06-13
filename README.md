@@ -19,6 +19,13 @@ The way this project should be used is by:
 4. And to start the app, run `npm run start`.
 5. Finally, create a user and log in.
 
+# Missing things
+
+- Use a database to store Etherpad's data. Currently it is using `DirtyDB` witch stores everything along the project.
+- Provide support to create different pads for users: this example uses only one pad called "application_pad".
+- Enable `ep_hash_auth` to avoid storing of plain-text passwords in Etherpad `settings.json` file.
+- Set the path to the `LibreOffice` executable in order to import/export word documents. e.g. `/Applications/LibreOffice.app/Contents/MacOS/soffice` for a Mac computer with LibreOffice installed.
+
 # A real-time collaborative editor for the web
 
 ![Demo Etherpad Animated Jif](doc/images/etherpad_demo.gif "Etherpad in action")
